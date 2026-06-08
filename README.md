@@ -78,6 +78,8 @@ The Smart Parking System is a full-stack web application designed to simplify pa
 
 ## 📸 Screenshots
 <img width="640" height="272" alt="image" src="https://github.com/user-attachments/assets/1dcefc09-d2d9-4102-b308-ef65cde7304f" />
+<img width="620" height="280" alt="Screenshot 2026-06-05 145623" src="https://github.com/user-attachments/assets/ccfcc74c-9428-4a2d-b146-8e343358c3ac" />
+
 
 ---
 
