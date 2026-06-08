@@ -83,11 +83,6 @@ The Smart Parking System is a full-stack web application designed to simplify pa
 
 ---
 
-## 🔗 Project Link
-(Add deployed link if available)
-
----
-
 ## 📚 What I Learned
 - Building REST APIs using Spring Boot
 - Integrating frontend with backend using Axios
