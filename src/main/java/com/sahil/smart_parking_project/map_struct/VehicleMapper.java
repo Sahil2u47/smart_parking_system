@@ -1,12 +1,15 @@
 package com.sahil.smart_parking_project.map_struct;
 
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
 import com.sahil.smart_parking_project.dto.VehicleRequestDTO;
 import com.sahil.smart_parking_project.dto.VehicleResponseDTO;
 import com.sahil.smart_parking_project.entity.Vehicle;
 
+@Mapper(componentModel = "spring")
 public interface VehicleMapper {
-	
+
 	@Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     Vehicle toVehicle(VehicleRequestDTO dto);
@@ -15,5 +18,4 @@ public interface VehicleMapper {
     @Mapping(source = "user.name", target = "userName")
     @Mapping(source = "user.email", target = "userEmail")
     VehicleResponseDTO toVehicleResponseDTO(Vehicle vehicle);
-
 }

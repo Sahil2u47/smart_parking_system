@@ -8,9 +8,10 @@ import com.sahil.smart_parking_project.entity.ParkingSlot;
 
 @Mapper(componentModel = "spring")
 public interface ParkingSlotMapper {
+
+
+    ParkingSlot toParkingSlot(ParkingSlotRequestDTO dto);
+
+    ParkingSlotResponseDTO toParkingSlotResponseDTO(ParkingSlot entity);
 	
-	 ParkingSlot toParkingSlot(ParkingSlotRequestDTO dto);
-
-	    ParkingSlotResponseDTO toParkingSlotResponseDTO(ParkingSlot entity);
-
 }

@@ -31,7 +31,6 @@ public class ParkingSlot {
 
 	public ParkingSlot() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ParkingSlot(Long id, String slotNumber, SlotStatus status, VehicleType slotType) {
