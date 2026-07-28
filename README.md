@@ -1,4 +1,41 @@
+<div align="center">
+
 # 🚀 Smart Parking System
+
+### *Find. Book. Park. — Real-time parking made simple* 🅿️
+
+![Java](https://img.shields.io/badge/Java-orange?logo=openjdk&logoColor=white&style=for-the-badge)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=springboot&logoColor=white&style=for-the-badge)
+![React](https://img.shields.io/badge/React.js-61DAFB?logo=react&logoColor=black&style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white&style=for-the-badge)
+
+![REST API](https://img.shields.io/badge/API-REST-blue?style=flat-square)
+![Axios](https://img.shields.io/badge/HTTP%20Client-Axios-5A29E4?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
+
+</div>
+
+<br>
+
+> 💡 **TL;DR** — A full-stack parking management platform: real-time slot availability 🅿️, instant booking 📲, and a dedicated admin panel 🛠️ — powered by Spring Boot + React.
+
+---
+
+## 📖 Table of Contents
+
+- [📌 Project Overview](#-project-overview)
+- [🎯 Objectives](#-objectives)
+- [🛠 Tech Stack](#-tech-stack)
+- [✨ Key Features](#-key-features)
+- [🧱 System Architecture](#-system-architecture)
+- [🔄 API Flow](#-api-flow-example)
+- [▶️ How to Run](#️-how-to-run-the-project)
+- [📸 Screenshots](#-screenshots)
+- [📚 What I Learned](#-what-i-learned)
+- [🚀 Future Enhancements](#-future-enhancements)
+- [👨‍💻 Author](#-author)
+
+---
 
 ## 📌 Project Overview
 The Smart Parking System is a full-stack web application designed to simplify parking management. It allows users to check real-time parking slot availability, book slots, and manage reservations efficiently. The system also provides an admin panel for monitoring and managing parking operations.
@@ -77,9 +114,10 @@ The Smart Parking System is a full-stack web application designed to simplify pa
 ---
 
 ## 📸 Screenshots
+
+<div align="center">
 <img width="660" height="262" alt="image" src="https://github.com/user-attachments/assets/c908e518-9aa8-43a6-9613-60be89f93bc9" />
-
-
+</div>
 
 ---
 
@@ -101,3 +139,13 @@ The Smart Parking System is a full-stack web application designed to simplify pa
 
 ## 👨‍💻 Author
 **Sahid Anwar**
+
+<div align="center">
+
+---
+
+### 🅿️ Thanks for checking out this project!
+
+⭐ **If you found this useful, consider starring the repo** ⭐
+
+</div>
