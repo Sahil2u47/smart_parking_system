@@ -97,7 +97,7 @@ The Smart Parking System is a full-stack web application designed to simplify pa
 5. Response sent back to frontend
 
 ---
-
+ 
 ## ▶️ How to Run the Project
 
 ### 🔹 Backend Setup
