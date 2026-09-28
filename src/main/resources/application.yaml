@@ -3,9 +3,9 @@ spring:
     name: smart_parking_system
 
   datasource:
-    url: jdbc:mysql://localhost:3306/smart_parkingdb?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/smart_parkingdb
     username: root
-    password: '@Sahil_2030'
+    password: Khadoosnii1616%
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

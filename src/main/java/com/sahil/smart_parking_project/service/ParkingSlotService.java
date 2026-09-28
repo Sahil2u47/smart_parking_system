@@ -6,6 +6,7 @@ import com.sahil.smart_parking_project.dto.ParkingSlotRequestDTO;
 import com.sahil.smart_parking_project.dto.ParkingSlotResponseDTO;
 import com.sahil.smart_parking_project.entity.ParkingSlot;
 import com.sahil.smart_parking_project.enums.SlotStatus;
+import com.sahil.smart_parking_project.globalException.DuplicateResourceException;
 import com.sahil.smart_parking_project.map_struct.ParkingSlotMapper;
 import com.sahil.smart_parking_project.repository.ParkingSlotRepository;
 
@@ -13,7 +14,6 @@ import com.sahil.smart_parking_project.repository.ParkingSlotRepository;
 public class ParkingSlotService {
 
 	private final ParkingSlotRepository parkingSlotRepository;
-
 	private final ParkingSlotMapper parkingSlotMapper;
 
 	public ParkingSlotService(ParkingSlotRepository parkingSlotRepository, ParkingSlotMapper parkingSlotMapper) {
@@ -25,20 +25,14 @@ public class ParkingSlotService {
 	public ParkingSlotResponseDTO registerParkingSlot(ParkingSlotRequestDTO dto) {
 
 		if (parkingSlotRepository.existsBySlotNumber(dto.getSlotNumber())) {
-			throw new RuntimeException("Parking slot already exists");
+			throw new DuplicateResourceException("Parking slot already exists");
 		}
 
 		ParkingSlot slot = parkingSlotMapper.toParkingSlot(dto);
-
-		// Default status
 		slot.setStatus(SlotStatus.AVAILABLE);
 
 		ParkingSlot savedSlot = parkingSlotRepository.saveAndFlush(slot);
 
-		//
-		ParkingSlotResponseDTO response = parkingSlotMapper.toParkingSlotResponseDTO(savedSlot);
-
-		return response;
+		return parkingSlotMapper.toParkingSlotResponseDTO(savedSlot);
 	}
-
 }

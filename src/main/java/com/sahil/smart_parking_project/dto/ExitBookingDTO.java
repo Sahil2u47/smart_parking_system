@@ -1,9 +1,6 @@
 package com.sahil.smart_parking_project.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 public class ExitBookingDTO {
 	
@@ -12,10 +9,9 @@ public class ExitBookingDTO {
 
 	public ExitBookingDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public ExitBookingDTO(@NotBlank(message = "Vehicle number is required") String vehicleNumber) {
+	public ExitBookingDTO(String vehicleNumber) {
 		super();
 		this.vehicleNumber = vehicleNumber;
 	}

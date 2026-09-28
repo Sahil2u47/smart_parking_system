@@ -12,7 +12,6 @@ public class ParkingSlotResponseDTO {
 
 	public ParkingSlotResponseDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ParkingSlotResponseDTO(Long id, String slotNumber, SlotStatus status, VehicleType slotType) {

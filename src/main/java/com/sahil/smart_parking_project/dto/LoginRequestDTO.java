@@ -2,7 +2,6 @@ package com.sahil.smart_parking_project.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
 
 public class LoginRequestDTO {
 

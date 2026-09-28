@@ -15,5 +15,9 @@ public interface ParkingSlotRepository extends JpaRepository<ParkingSlot, Long> 
 	boolean existsBySlotNumber(String slotNumber);
 
 	Optional<ParkingSlot> findFirstByStatusAndSlotType(SlotStatus status, VehicleType slotType);
+	
+	long countBySlotType(VehicleType slotType);
+
+	long countBySlotTypeAndStatus(VehicleType slotType, SlotStatus status);
 
 }

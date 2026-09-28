@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sahil.smart_parking_project.dto.BookingEntryDTO;
+import com.sahil.smart_parking_project.dto.BookingResponseDTO;
 import com.sahil.smart_parking_project.dto.ExitBookingDTO;
-import com.sahil.smart_parking_project.entity.Booking;
 import com.sahil.smart_parking_project.service.ParkingSlotBookingService;
 
 import jakarta.validation.Valid;
@@ -27,17 +27,18 @@ public class ParkingBookingController {
 	}
 
 	@PostMapping("/book")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Booking> createBooking(@Valid @RequestBody BookingEntryDTO dto) {
-
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<BookingResponseDTO> createBooking(@Valid @RequestBody BookingEntryDTO dto) {
 		return ResponseEntity.ok(parkingSlotBookingService.createBooking(dto));
 	}
 
 	@PutMapping("/exit")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Booking> exitBooking(@Valid @RequestBody ExitBookingDTO dto) {
-
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<BookingResponseDTO> exitBooking(@Valid @RequestBody ExitBookingDTO dto) {
 		return ResponseEntity.ok(parkingSlotBookingService.exitBooking(dto));
 	}
 
 }
+
+
+

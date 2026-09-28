@@ -66,7 +66,7 @@ public class AuthController {
 
 		System.out.println("response = " + response);
 
-		return new ResponseEntity(response, HttpStatus.CREATED);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 
 	}
 

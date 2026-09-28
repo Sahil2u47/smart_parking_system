@@ -14,14 +14,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Booking {
 
 	@Id
@@ -37,6 +32,8 @@ public class Booking {
 	private BookingStatus status;
 
 	private Double amount;
+	
+	private Double surgeMultiplier;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -52,7 +49,6 @@ public class Booking {
 
 	public Booking() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Booking(Long id, LocalDateTime startTime, LocalDateTime endTime, BookingStatus status, Double amount,
@@ -130,6 +126,14 @@ public class Booking {
 
 	public void setVehicle(Vehicle vehicle) {
 		this.vehicle = vehicle;
+	}
+	
+	public Double getSurgeMultiplier() {
+		return surgeMultiplier;
+	}
+
+	public void setSurgeMultiplier(Double surgeMultiplier) {
+		this.surgeMultiplier = surgeMultiplier;
 	}
 	
 	

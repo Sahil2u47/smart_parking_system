@@ -7,8 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-
 import com.sahil.smart_parking_project.dto.BookingEntryDTO;
+import com.sahil.smart_parking_project.dto.BookingResponseDTO;
 import com.sahil.smart_parking_project.dto.ExitBookingDTO;
 import com.sahil.smart_parking_project.entity.Booking;
 import com.sahil.smart_parking_project.entity.ParkingSlot;
@@ -17,10 +17,15 @@ import com.sahil.smart_parking_project.entity.Vehicle;
 import com.sahil.smart_parking_project.enums.BookingStatus;
 import com.sahil.smart_parking_project.enums.SlotStatus;
 import com.sahil.smart_parking_project.enums.VehicleType;
+import com.sahil.smart_parking_project.globalException.ResourceNotFoundException;
+import com.sahil.smart_parking_project.globalException.SlotUnavailableException;
+import com.sahil.smart_parking_project.globalException.UnauthorizedActionException;
+import com.sahil.smart_parking_project.map_struct.BookingMapper;
 import com.sahil.smart_parking_project.repository.BookingRepository;
 import com.sahil.smart_parking_project.repository.ParkingSlotRepository;
 import com.sahil.smart_parking_project.repository.UserRepository;
 import com.sahil.smart_parking_project.repository.VehicleRepository;
+import com.sahil.smart_parking_project.util.ParkingBookingSlotUtil;
 
 @Service
 public class ParkingSlotBookingService {
@@ -29,19 +34,22 @@ public class ParkingSlotBookingService {
 	private final UserRepository userRepository;
 	private final VehicleRepository vehicleRepository;
 	private final ParkingSlotRepository slotRepository;
-	
-	
+	private final ParkingBookingSlotUtil parkingBookingSlotUtil;
+	private final BookingMapper bookingMapper;
 
 	public ParkingSlotBookingService(BookingRepository bookingRepository, UserRepository userRepository,
-			VehicleRepository vehicleRepository, ParkingSlotRepository slotRepository) {
+			VehicleRepository vehicleRepository, ParkingSlotRepository slotRepository,
+			ParkingBookingSlotUtil parkingBookingSlotUtil, BookingMapper bookingMapper) {
 		super();
 		this.bookingRepository = bookingRepository;
 		this.userRepository = userRepository;
 		this.vehicleRepository = vehicleRepository;
 		this.slotRepository = slotRepository;
+		this.parkingBookingSlotUtil = parkingBookingSlotUtil;
+		this.bookingMapper = bookingMapper;
 	}
 
-	public Booking createBooking(BookingEntryDTO dto) {
+	public BookingResponseDTO createBooking(BookingEntryDTO dto) {
 
 		// Logged-in user
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -49,19 +57,24 @@ public class ParkingSlotBookingService {
 		String email = authentication.getName();
 
 		User user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("User not logged in please login and try again"));
+				.orElseThrow(() -> new ResourceNotFoundException("User not logged in please login and try again"));
 
 		// Find parking slot
 		ParkingSlot slot = slotRepository.findBySlotNumber(dto.getSlotNumber())
-				.orElseThrow(() -> new RuntimeException("Slot is not Found"));
+				.orElseThrow(() -> new ResourceNotFoundException("Slot is not Found"));
 
 		System.out.println("Slot found: " + slot.getSlotNumber() + " with status: " + slot.getStatus());
 
 		// Check slot availability
 		if (slot.getStatus() == SlotStatus.OCCUPIED) {
 			System.out.println("Slot is already occupied: " + slot.getSlotNumber());
-			throw new RuntimeException("Slot already occupied");
+			throw new SlotUnavailableException("Slot already occupied");
 		}
+
+		// Demand-based surge pricing — calculated at booking time and locked on the booking
+		long totalSlotsOfType = slotRepository.countBySlotType(dto.getVehicleType());
+		long occupiedSlotsOfType = slotRepository.countBySlotTypeAndStatus(dto.getVehicleType(), SlotStatus.OCCUPIED);
+		double surgeMultiplier = parkingBookingSlotUtil.getSurgeMultiplier(occupiedSlotsOfType, totalSlotsOfType);
 
 		// Find vehicle
 		Vehicle vehicle = vehicleRepository.findByVehicleNumber(dto.getVehicleNumber()).orElse(null);
@@ -73,7 +86,6 @@ public class ParkingSlotBookingService {
 
 			vehicle.setVehicleNumber(dto.getVehicleNumber());
 			vehicle.setVehicleType(dto.getVehicleType());
-			// NEW
 			vehicle.setBrand(dto.getBrand());
 			vehicle.setColor(dto.getColor());
 
@@ -89,12 +101,15 @@ public class ParkingSlotBookingService {
 		booking.setVehicle(vehicle);
 		booking.setSlot(slot);
 		booking.setStatus(BookingStatus.ACTIVE);
+		booking.setSurgeMultiplier(surgeMultiplier);
 
 		// Mark slot occupied
-		slot.setStatus(slot.getStatus().OCCUPIED);
+		slot.setStatus(SlotStatus.OCCUPIED);
 		slotRepository.save(slot);
 
-		return bookingRepository.save(booking);
+		Booking saved = bookingRepository.save(booking);
+
+		return bookingMapper.toBookingResponseDTO(saved);
 	}
 
 	/**
@@ -103,7 +118,7 @@ public class ParkingSlotBookingService {
 	 * @param dto
 	 * @return
 	 */
-	public Booking exitBooking(ExitBookingDTO dto) {
+	public BookingResponseDTO exitBooking(ExitBookingDTO dto) {
 
 		// Logged-in user
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -111,16 +126,16 @@ public class ParkingSlotBookingService {
 		String email = authentication.getName();
 
 		User user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("User not logged in please login again"));
+				.orElseThrow(() -> new ResourceNotFoundException("User not logged in please login and try again"));
 
 		// Find active booking
 		Booking booking = bookingRepository
 				.findByVehicleVehicleNumberAndStatus(dto.getVehicleNumber(), BookingStatus.ACTIVE)
-				.orElseThrow(() -> new RuntimeException("Active booking not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("Active booking not found"));
 
 		// Security check
 		if (!booking.getUser().getId().equals(user.getId())) {
-			throw new RuntimeException("You cannot exit another user's vehicle");
+			throw new UnauthorizedActionException("You cannot exit another user's vehicle");
 		}
 
 		// Exit time
@@ -136,30 +151,12 @@ public class ParkingSlotBookingService {
 			hours = 1;
 		}
 
-		// Rate calculation
+		// Rate calculation — uses the surge multiplier locked in at booking time
 		VehicleType vehicleType = booking.getVehicle().getVehicleType();
 
-		double ratePerHour = 0;
+		double surgeMultiplier = booking.getSurgeMultiplier() != null ? booking.getSurgeMultiplier() : 1.0;
 
-		switch (vehicleType) {
-
-		case CAR:
-			ratePerHour = 50;
-			break;
-
-		case AUTO:
-			ratePerHour = 40;
-			break;
-
-		case BIKE:
-			ratePerHour = 20;
-			break;
-
-		default:
-			throw new RuntimeException("Invalid vehicle type");
-		}
-
-		double totalAmount = hours * ratePerHour;
+		double totalAmount = parkingBookingSlotUtil.calculateAmount(vehicleType, hours, surgeMultiplier);
 
 		booking.setAmount(totalAmount);
 
@@ -169,11 +166,16 @@ public class ParkingSlotBookingService {
 		// Make slot available
 		ParkingSlot slot = booking.getSlot();
 
-		slot.setStatus(slot.getStatus().AVAILABLE);
+		slot.setStatus(SlotStatus.AVAILABLE);
 
 		slotRepository.save(slot);
 
-		return bookingRepository.save(booking);
+		Booking saved = bookingRepository.save(booking);
+
+		BookingResponseDTO responseDTO = bookingMapper.toBookingResponseDTO(saved);
+		responseDTO.setTotalHours(hours);
+
+		return responseDTO;
 	}
 
 }
