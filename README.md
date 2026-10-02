@@ -582,8 +582,7 @@ DB_PASSWORD=your_database_password
 JWT_SECRET=your_long_secure_jwt_secret
 ```
 
-> [!WARNING]
-> Never commit real database passwords or JWT secrets to GitHub.
+
 
 **4. Run the application**
 
@@ -609,11 +608,6 @@ The backend starts at **http://localhost:8182**
 
 - [ ] 💳 Payment gateway integration
 - [ ] 🔔 Email / SMS notifications
-- [ ] 📝 Audit logging
-- [ ] 📚 OpenAPI / Swagger documentation
-- [ ] 🧪 Comprehensive unit and integration tests
-- [ ] 📊 Advanced reporting
-- [ ] ⚙️ Production monitoring and observability
 
 ---
 
