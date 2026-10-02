@@ -22,15 +22,10 @@ public class VehicleRequestDTO {
 	private String color;
 
 	public VehicleRequestDTO() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public VehicleRequestDTO(
-			@NotBlank(message = "Vehicle number is required") @Pattern(regexp = "^[A-Z0-9-]+$", message = "Vehicle number must be uppercase") String vehicleNumber,
-			VehicleType vehicleType, @NotBlank(message = "Brand is required") String brand,
-			@NotBlank(message = "Color is required") String color) {
-		super();
+	public VehicleRequestDTO(String vehicleNumber, VehicleType vehicleType, String brand, String color) {
+
 		this.vehicleNumber = vehicleNumber;
 		this.vehicleType = vehicleType;
 		this.brand = brand;

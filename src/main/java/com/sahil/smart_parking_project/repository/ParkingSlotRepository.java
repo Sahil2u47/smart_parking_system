@@ -20,4 +20,5 @@ public interface ParkingSlotRepository extends JpaRepository<ParkingSlot, Long> 
 
 	long countBySlotTypeAndStatus(VehicleType slotType, SlotStatus status);
 
+	long countByStatus(SlotStatus status);
 }

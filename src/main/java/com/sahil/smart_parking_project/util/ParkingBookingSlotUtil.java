@@ -3,10 +3,17 @@ package com.sahil.smart_parking_project.util;
 import org.springframework.stereotype.Component;
 
 import com.sahil.smart_parking_project.enums.VehicleType;
+import com.sahil.smart_parking_project.service.ParkingRateService;
 
 @Component
 public class ParkingBookingSlotUtil {
 
+	 private final ParkingRateService parkingRateService;
+
+	    public ParkingBookingSlotUtil(ParkingRateService parkingRateService) {
+	        this.parkingRateService = parkingRateService;
+	    }
+	
 	public double getSurgeMultiplier(long occupied, long total) {
 
 		if (total == 0) {
@@ -24,26 +31,13 @@ public class ParkingBookingSlotUtil {
 		return 1.0;
 	}
 
-	public double calculateAmount(VehicleType type, long hours, double surgeMultiplier) {
+	 public double calculateAmount(
+	            VehicleType type,
+	            long hours,
+	            double surgeMultiplier) {
 
-		double rate = 0;
+	        double rate = parkingRateService.getRatePerHour(type);
 
-		switch (type) {
-
-		case BIKE:
-			rate = 20;
-			break;
-
-		case CAR:
-			rate = 50;
-			break;
-
-		case AUTO:
-			rate = 40;
-			break;
-		}
-
-		return rate * hours * surgeMultiplier;
-	}
-
+	        return rate * hours * surgeMultiplier;
+	    }
 }

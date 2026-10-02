@@ -15,9 +15,6 @@ public class BookingEntryDTO {
 	@NotNull(message = "Vehicle type is required")
 	private VehicleType vehicleType;
 
-	@NotBlank(message = "Slot number is required")
-	private String slotNumber;
-
 	// NEW FIELDS
 	private String brand;
 
@@ -30,12 +27,10 @@ public class BookingEntryDTO {
 
 	public BookingEntryDTO(
 			@NotBlank(message = "Vehicle number is required") @Pattern(regexp = "^[A-Z0-9-]+$", message = "Vehicle number must be uppercase") String vehicleNumber,
-			VehicleType vehicleType, @NotBlank(message = "Slot number is required") String slotNumber, String brand,
+			VehicleType vehicleType, String brand,
 			String color) {
-		super();
 		this.vehicleNumber = vehicleNumber;
 		this.vehicleType = vehicleType;
-		this.slotNumber = slotNumber;
 		this.brand = brand;
 		this.color = color;
 	}
@@ -54,14 +49,6 @@ public class BookingEntryDTO {
 
 	public void setVehicleType(VehicleType vehicleType) {
 		this.vehicleType = vehicleType;
-	}
-
-	public String getSlotNumber() {
-		return slotNumber;
-	}
-
-	public void setSlotNumber(String slotNumber) {
-		this.slotNumber = slotNumber;
 	}
 
 	public String getBrand() {

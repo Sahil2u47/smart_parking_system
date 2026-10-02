@@ -1,9 +1,11 @@
 package com.sahil.smart_parking_project.security;
 
-import org.springframework.stereotype.Component;
-
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,37 +14,56 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtils {
 
-	private final String SECRET = "helloThisIsMySecretKey123SahilDbdSamiala2030Jalwara";
+    private final String secret;
+    private final long expiration;
 
-	private final long EXPIRATION = 1000 * 60 * 60;// 1 hour
+    public JwtUtils(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration}") long expiration) {
 
-	private Key getSignKey() {
-		return Keys.hmacShaKeyFor(SECRET.getBytes());
-	}
+        this.secret = secret;
+        this.expiration = expiration;
+    }
 
-	public String generateToken(String email) {
+    private Key getSignKey() {
+        return Keys.hmacShaKeyFor(
+                secret.getBytes(StandardCharsets.UTF_8));
+    }
 
-		return Jwts.builder().setSubject(email).setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
-	}
+    public String generateToken(String email) {
 
-	public String extractEmail(String token) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(
+                        new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
-		return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody().getSubject();
-	}
+    public String extractEmail(String token) {
 
-	public boolean validateToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
 
-		try {
+    public boolean validateToken(String token) {
 
-			Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
+        try {
 
-			return true;
+            Jwts.parserBuilder()
+                    .setSigningKey(getSignKey())
+                    .build()
+                    .parseClaimsJws(token);
 
-		} catch (Exception e) {
-			return false;
-		}
-	}
+            return true;
 
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

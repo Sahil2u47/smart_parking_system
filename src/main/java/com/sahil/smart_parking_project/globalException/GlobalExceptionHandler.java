@@ -15,7 +15,7 @@ import org.springframework.validation.FieldError;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	// 1) @Valid validation fail hone par (e.g. UserRequestDTO ke fields)
+	// 1) @Valid validation fail hone par ( UserRequestDTO ke fields)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
 
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
-	// 2) Resource not mila (User/Slot/Vehicle/Booking) -> 404
+	// 2) Resource nhi mila (User/Slot/Vehicle/Booking) -> 404
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
 		ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage());
@@ -90,5 +90,18 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleDuplicateResource(DuplicateResourceException ex) {
 		ErrorResponse response = new ErrorResponse(HttpStatus.CONFLICT.value(), "Duplicate Resource", ex.getMessage());
 		return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(InvalidParkingRateException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidParkingRate(
+	        InvalidParkingRateException ex) {
+
+	    ErrorResponse response = new ErrorResponse(
+	            HttpStatus.BAD_REQUEST.value(),
+	            "Invalid Parking Rate",
+	            ex.getMessage()
+	    );
+
+	    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 }
