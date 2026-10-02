@@ -329,7 +329,7 @@ Rates are stored in the **database**, not hardcoded in booking logic, and can be
 | Vehicle | Rate |
 |:---|---:|
 | 🏍️ Bike | ₹20 / hour |
-| 🛺 Auto | ₹40 / hour |
+| 🛺 Auto | ₹30 / hour |
 | 🚗 Car | ₹50 / hour |
 
 ### ⚡ Surge Pricing
