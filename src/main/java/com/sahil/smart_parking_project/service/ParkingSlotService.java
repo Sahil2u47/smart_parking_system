@@ -1,5 +1,7 @@
 package com.sahil.smart_parking_project.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.sahil.smart_parking_project.dto.ParkingSlotRequestDTO;
@@ -20,6 +22,13 @@ public class ParkingSlotService {
 		super();
 		this.parkingSlotRepository = parkingSlotRepository;
 		this.parkingSlotMapper = parkingSlotMapper;
+	}
+
+	public List<ParkingSlotResponseDTO> getAllParkingSlots() {
+
+		List<ParkingSlot> slots = parkingSlotRepository.findAll();
+
+		return slots.stream().map(parkingSlotMapper::toParkingSlotResponseDTO).toList();
 	}
 
 	public ParkingSlotResponseDTO registerParkingSlot(ParkingSlotRequestDTO dto) {

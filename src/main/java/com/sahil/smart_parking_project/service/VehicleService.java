@@ -1,5 +1,7 @@
 package com.sahil.smart_parking_project.service;
 
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -55,4 +57,26 @@ public class VehicleService {
 
 		return vehicleMapper.toVehicleResponseDTO(savedVehicle);
 	}
+	
+//	find user vehicle
+	
+	public List<VehicleResponseDTO> getMyVehiclesService() {
+
+	    Authentication authentication =
+	            SecurityContextHolder.getContext().getAuthentication();
+
+	    String email = authentication.getName();
+
+	    User user = userRepository.findByEmail(email)
+	            .orElseThrow(() -> new ResourceNotFoundException(
+	                    "You are not authenticated, please login and try again"));
+
+	    List<Vehicle> vehicles = vehicleRepository.findByUser(user);
+
+	    return vehicles.stream()
+	            .map(vehicleMapper::toVehicleResponseDTO)
+	            .toList();
+	}
+	
+	
 }

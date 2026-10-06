@@ -160,8 +160,9 @@ public class ParkingSlotBookingService {
 
 		booking.setEndTime(endTime);
 
-		// Calculate duration
-		long hours = Duration.between(booking.getStartTime(), endTime).toHours();
+		// Calculate duration (partial hour is charged as a full hour)
+		long minutes = Duration.between(booking.getStartTime(), endTime).toMinutes();
+		long hours = (minutes + 59) / 60;
 
 		// Minimum 1 hour
 		if (hours == 0) {
@@ -191,10 +192,12 @@ public class ParkingSlotBookingService {
 
 		BookingResponseDTO responseDTO = bookingMapper.toBookingResponseDTO(saved);
 		responseDTO.setTotalHours(hours);
+		responseDTO.setTotalAmount(totalAmount);
 
 		return responseDTO;
 	}
-
+	
+	
 	public Page<BookingResponseDTO> getMyBookings(Pageable pageable) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

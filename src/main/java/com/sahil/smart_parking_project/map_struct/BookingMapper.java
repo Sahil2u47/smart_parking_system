@@ -9,10 +9,11 @@ import com.sahil.smart_parking_project.entity.Booking;
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
 
-	@Mapping(source = "id", target = "bookingId")
-	@Mapping(source = "vehicle.vehicleNumber", target = "vehicleNumber")
-	@Mapping(source = "slot.slotNumber", target = "slotNumber")
-	@Mapping(target = "totalHours", ignore = true)
-	BookingResponseDTO toBookingResponseDTO(Booking booking);
+    @Mapping(source = "id", target = "bookingId")
+    @Mapping(source = "vehicle.vehicleNumber", target = "vehicleNumber")
+    @Mapping(source = "slot.slotNumber", target = "slotNumber")
+    @Mapping(source = "amount", target = "totalAmount")
+    @Mapping(target = "totalHours", ignore = true)
+    BookingResponseDTO toBookingResponseDTO(Booking booking);
 
 }

@@ -1,8 +1,11 @@
 package com.sahil.smart_parking_project.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +35,16 @@ public class ParkingSlotController {
 		ParkingSlotResponseDTO response = parkingSlotService.registerParkingSlot(dto);
 
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+	
+	@GetMapping
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<List<ParkingSlotResponseDTO>> getAllParkingSlots() {
+
+	    List<ParkingSlotResponseDTO> response =
+	            parkingSlotService.getAllParkingSlots();
+
+	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }
