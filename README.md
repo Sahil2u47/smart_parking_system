@@ -693,11 +693,6 @@ mvnw.cmd spring-boot:run
 
 ## 🔮 Roadmap
 
-- [x] 🔐 JWT authentication & RBAC
-- [x] 🅿️ Automatic slot allocation
-- [x] ⚡ Pessimistic locking for concurrency
-- [x] 💰 Database-backed rates & surge pricing
-- [x] 📊 Admin analytics
 - [ ] 💳 Payment gateway integration
 - [ ] 🔔 Email / SMS notifications
 
