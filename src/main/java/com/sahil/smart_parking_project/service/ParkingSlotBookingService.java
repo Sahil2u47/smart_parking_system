@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.sahil.smart_parking_project.dto.BookingEntryDTO;
 import com.sahil.smart_parking_project.dto.BookingResponseDTO;
-import com.sahil.smart_parking_project.dto.CancelBookingDTO;
 import com.sahil.smart_parking_project.dto.ExitBookingDTO;
 import com.sahil.smart_parking_project.entity.Booking;
 import com.sahil.smart_parking_project.entity.ParkingSlot;
@@ -209,36 +208,6 @@ public class ParkingSlotBookingService {
 		return bookings.map(bookingMapper::toBookingResponseDTO);
 	}
 
-//	Cancel booking
 
-	@Transactional
-	public BookingResponseDTO cancelBooking(CancelBookingDTO dto) {
-
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		String email = authentication.getName();
-
-		Booking booking = bookingRepository
-				.findByVehicleVehicleNumberAndStatus(dto.getVehicleNumber(), BookingStatus.ACTIVE)
-				.orElseThrow(() -> new ResourceNotFoundException(
-						"Active booking not found for vehicle: " + dto.getVehicleNumber()));
-
-		// Ownership check
-		if (!booking.getUser().getEmail().equals(email)) {
-			throw new UnauthorizedActionException("You are not authorized to cancel this booking");
-		}
-
-		// Cancel booking
-		booking.setStatus(BookingStatus.CANCELLED);
-
-		// Release parking slot
-		ParkingSlot slot = booking.getSlot();
-		slot.setStatus(SlotStatus.AVAILABLE);
-
-		bookingRepository.save(booking);
-		slotRepository.save(slot);
-
-		return bookingMapper.toBookingResponseDTO(booking);
-	}
 
 }

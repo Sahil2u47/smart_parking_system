@@ -29,7 +29,6 @@ public class ParkingAnalyticsService {
 
 		long occupiedSlots = parkingSlotRepository.countByStatus(SlotStatus.OCCUPIED);
 
-		long maintenanceSlots = parkingSlotRepository.countByStatus(SlotStatus.MAINTENANCE);
 
 		double occupancyPercentage = 0.0;
 
@@ -42,7 +41,6 @@ public class ParkingAnalyticsService {
 		response.setTotalSlots(totalSlots);
 		response.setAvailableSlots(availableSlots);
 		response.setOccupiedSlots(occupiedSlots);
-		response.setMaintenanceSlots(maintenanceSlots);
 		response.setOccupancyPercentage(occupancyPercentage);
 
 		// Vehicle type wise analytics

@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: smart_parking_system
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/smart_parkingdb
+    username: root
+    password: Khadoosnii1616%
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: helloThisIsMySecretKey123SahilDbdSamiala2030Jalwara
+  expiration: 3600000
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+server:
+  port: 8182

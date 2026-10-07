@@ -23,7 +23,6 @@ public class ParkingBookingAnalyticsService {
 
 		long completedBookings = bookingRepository.countByStatus(BookingStatus.COMPLETED);
 
-		long cancelledBookings = bookingRepository.countByStatus(BookingStatus.CANCELLED);
 
 		Double revenue = bookingRepository.getTotalAmountByStatus(BookingStatus.COMPLETED);
 
@@ -34,7 +33,6 @@ public class ParkingBookingAnalyticsService {
 		response.setTotalBookings(totalBookings);
 		response.setActiveBookings(activeBookings);
 		response.setCompletedBookings(completedBookings);
-		response.setCancelledBookings(cancelledBookings);
 		response.setTotalRevenue(totalRevenue);
 
 		return response;

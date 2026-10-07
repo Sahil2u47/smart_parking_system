@@ -37,7 +37,7 @@ public class SmartParkingSpringSecurity {
 
 				.authorizeHttpRequests(auth -> auth
 
-						.requestMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+						.requestMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/parking-rates")
 						.permitAll().requestMatchers("/booking/**").hasAnyRole("USER", "ADMIN")
 						.requestMatchers("/vehicle/**").hasAnyRole("USER", "ADMIN")
 
