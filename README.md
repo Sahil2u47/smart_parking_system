@@ -2,73 +2,94 @@
 
 <img src="assets/parking-system.gif" alt="Smart Parking System" width="100%"/>
 
-<br/>
+<br/><br/>
 
 # 🚗 Smart Parking System
 
-### Production-oriented REST API for intelligent parking management
+**A production-grade REST API that allocates, prices and manages parking — automatically.**
 
-**Automatic Slot Allocation** · **JWT Security** · **RBAC** · **Dynamic Pricing** · **Concurrency Control** · **Analytics**
+<sub>Slot allocation &nbsp;•&nbsp; JWT + RBAC &nbsp;•&nbsp; Surge pricing &nbsp;•&nbsp; Pessimistic locking &nbsp;•&nbsp; Admin analytics</sub>
 
 <br/>
 
-[![Java](https://img.shields.io/badge/Java-21%2B-orange?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
+[![Java](https://img.shields.io/badge/Java-21%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Spring Security](https://img.shields.io/badge/Spring%20Security-JWT-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)](https://spring.io/projects/spring-security)
 [![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![Maven](https://img.shields.io/badge/Maven-Build-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)](https://maven.apache.org/)
 
-![REST](https://img.shields.io/badge/API-REST-0EA5E9?style=flat-square)
-![JWT](https://img.shields.io/badge/Auth-JWT-F59E0B?style=flat-square)
-![RBAC](https://img.shields.io/badge/Security-RBAC-8B5CF6?style=flat-square)
-![MapStruct](https://img.shields.io/badge/Mapping-MapStruct-EAB308?style=flat-square)
+![API](https://img.shields.io/badge/API-REST-0EA5E9?style=flat-square)
+![Auth](https://img.shields.io/badge/Auth-JWT-F59E0B?style=flat-square)
+![Security](https://img.shields.io/badge/Security-RBAC-8B5CF6?style=flat-square)
+![Concurrency](https://img.shields.io/badge/Concurrency-Pessimistic%20Lock-EF4444?style=flat-square)
+![Mapping](https://img.shields.io/badge/Mapping-MapStruct-EAB308?style=flat-square)
 ![Status](https://img.shields.io/badge/Status-Active-22C55E?style=flat-square)
 
 <br/>
 
-[**Overview**](#-overview) ·
-[**Features**](#-feature-highlights) ·
-[**Architecture**](#-architecture) ·
-[**Core Flows**](#-core-flows) ·
-[**API**](#-api-reference) ·
-[**Run Locally**](#-run-locally)
+[**Overview**](#-overview) &nbsp;·&nbsp;
+[**Features**](#-feature-highlights) &nbsp;·&nbsp;
+[**Architecture**](#-architecture) &nbsp;·&nbsp;
+[**Core Flows**](#-core-flows) &nbsp;·&nbsp;
+[**API**](#-api-reference) &nbsp;·&nbsp;
+[**Quick Start**](#-quick-start)
 
 </div>
+
+<br/>
+
+---
+
+<table align="center">
+<tr>
+<td align="center" width="25%"><h2>3</h2><sub>Vehicle types<br/>CAR · BIKE · AUTO</sub></td>
+<td align="center" width="25%"><h2>2</h2><sub>Roles<br/>USER · ADMIN</sub></td>
+<td align="center" width="25%"><h2>11</h2><sub>REST endpoints</sub></td>
+<td align="center" width="25%"><h2>0</h2><sub>Double-booked slots<br/>by design</sub></td>
+</tr>
+</table>
 
 ---
 
 ## 📑 Table of Contents
 
-- [Overview](#-overview)
-- [Feature Highlights](#-feature-highlights)
-- [Architecture](#-architecture)
-- [Core Flows](#-core-flows)
-- [Pricing Engine](#-pricing-engine)
-- [Concurrency Control](#-concurrency-control)
-- [Admin Analytics](#-admin-analytics)
-- [Database Model](#-database-model)
-- [API Reference](#-api-reference)
-- [Project Structure](#-project-structure)
-- [Tech Stack](#-tech-stack)
-- [Run Locally](#-run-locally)
-- [Roadmap](#-roadmap)
-- [Author](#-author)
+<details>
+<summary><b>Click to expand</b></summary>
+
+<br/>
+
+1. [Overview](#-overview)
+2. [Feature Highlights](#-feature-highlights)
+3. [Architecture](#-architecture)
+4. [Core Flows](#-core-flows)
+5. [Pricing Engine](#-pricing-engine)
+6. [Concurrency Control](#-concurrency-control)
+7. [Admin Analytics](#-admin-analytics)
+8. [Database Model](#-database-model)
+9. [API Reference](#-api-reference)
+10. [Project Structure](#-project-structure)
+11. [Tech Stack](#-tech-stack)
+12. [Quick Start](#-quick-start)
+13. [Roadmap](#-roadmap)
+14. [Author](#-author)
+
+</details>
 
 ---
 
 ## 🎯 Overview
 
-**Smart Parking System is not just a CRUD application.** It is a backend-focused system built around real-world engineering problems:
+> **Smart Parking System is not a CRUD demo.** It is a backend built around the problems real parking platforms actually face — security, fairness under concurrency, pricing and observability.
 
-| | Question | Solution |
-|---|---|---|
-| 🔐 | How should authenticated users access protected APIs? | Stateless JWT + Spring Security + RBAC |
-| 🅿️ | How can a parking slot be allocated automatically? | Vehicle-type based slot matching |
-| ⚡ | What if multiple users request the last slot at once? | `@Transactional` + `PESSIMISTIC_WRITE` locking |
-| 💰 | How can prices change with occupancy? | Database-backed rates + surge multiplier |
-| 🔄 | How do entry and exit affect slot state? | Synchronized booking and slot state machines |
-| 📊 | How do admins monitor utilization and revenue? | Dedicated analytics services and APIs |
-| 🧩 | How do we keep API contracts separate from DB entities? | DTOs + MapStruct |
+| | Real-world question | How this project answers it |
+|:---:|---|---|
+| 🔐 | How do we protect APIs without server sessions? | Stateless **JWT** + Spring Security + **RBAC** |
+| 🅿️ | Who picks the slot? | The backend — **vehicle-type based** automatic allocation |
+| ⚡ | What if two users grab the last slot at once? | `@Transactional` + **`PESSIMISTIC_WRITE`** locking |
+| 💰 | How should price react to demand? | DB-backed rates + **occupancy-based surge** multiplier |
+| 🔄 | How do entry and exit affect state? | Synchronized **booking & slot state machines** |
+| 📊 | How do admins see utilization and revenue? | Dedicated **analytics services** and APIs |
+| 🧩 | How do we keep API and DB models decoupled? | **DTOs + MapStruct** |
 
 > [!NOTE]
 > This repository contains the **backend only**. The frontend is maintained separately.
@@ -77,42 +98,60 @@
 
 ## ✨ Feature Highlights
 
-| Area | What is implemented |
-|---|---|
-| 🔐 **Security** | JWT authentication, BCrypt hashing, role-based access control |
-| 👤 **Users** | Registration, login, `USER` and `ADMIN` roles |
-| 🚘 **Vehicles** | Registration with ownership validation |
-| 🅿️ **Parking** | Automatic vehicle-type based slot allocation |
-| 📋 **Booking** | Entry, exit and history |
-| 💰 **Pricing** | Database-backed rates with occupancy-based surge pricing |
-| ⚡ **Concurrency** | `@Transactional` with `PESSIMISTIC_WRITE` locking |
-| 📊 **Analytics** | Occupancy, booking and revenue analytics |
-| 📄 **History** | Pagination and sorting |
-| 🧩 **API Design** | DTOs with MapStruct |
-| 🛡️ **Errors** | Global exception handling and bean validation |
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🔐 Security
+JWT authentication, BCrypt password hashing, method-level `@PreAuthorize`, role-based access and ownership validation.
+
+### 🅿️ Smart Allocation
+Users never choose a slot. The system finds and locks a matching `AVAILABLE` slot for the vehicle type.
+
+### 📋 Booking Lifecycle
+Entry, exit and paginated history, with booking and slot states always kept in sync.
+
+### 💰 Dynamic Pricing
+Rates live in the database. A surge multiplier is computed from occupancy and **locked at entry**.
+
+</td>
+<td width="50%" valign="top">
+
+### ⚡ Concurrency Safe
+Database-level pessimistic locking guarantees a slot is never assigned twice.
+
+### 📊 Admin Analytics
+Occupancy, booking and revenue insights, including vehicle-type-wise slot stats.
+
+### 🧩 Clean API Design
+Entities are never exposed. Request/response DTOs are mapped with MapStruct.
+
+### 🛡️ Robust Errors
+Jakarta Bean Validation and a centralized `@RestControllerAdvice` with consistent error responses.
+
+</td>
+</tr>
+</table>
 
 ---
 
 ## 🏗️ Architecture
 
-The project follows a clean layered architecture.
+A clean, layered architecture with clear responsibilities per layer.
 
 ```mermaid
 flowchart TB
-    A[Client / Postman / Frontend]
-    B[REST Controllers]
-    C[Service Layer]
-    D[Repository Layer]
-    E[(MySQL Database)]
+    A["🖥️ Client · Postman · Frontend"]
+    B["🎛️ REST Controllers"]
+    C["🧠 Service Layer · Business Rules"]
+    D["🗃️ Repository Layer · Spring Data JPA"]
+    E[("🐬 MySQL")]
 
-    A --> B
-    B --> C
-    C --> D
-    D --> E
+    A --> B --> C --> D --> E
 
-    S[Spring Security<br/>JWT + RBAC] --> B
-    M[MapStruct<br/>DTO Mapping] --> C
-    X[Global Exception Handler] --> B
+    S["🔐 Spring Security<br/>JWT + RBAC"] -.-> B
+    M["🧩 MapStruct<br/>DTO Mapping"] -.-> C
+    X["🛡️ Global Exception Handler"] -.-> B
 ```
 
 <details>
@@ -141,32 +180,31 @@ HTTP Request
 
 ### 🧩 DTO & Mapping Strategy
 
-Entities are never exposed directly through REST APIs.
+Entities are **never** exposed through REST APIs.
 
 ```mermaid
 flowchart LR
-    A[JSON Request] --> B[Request DTO]
-    B --> C[MapStruct]
-    C --> D[JPA Entity]
-    D --> E[(Database)]
-    E --> D
-    D --> F[MapStruct]
-    F --> G[Response DTO]
-    G --> H[JSON Response]
+    A["JSON Request"] --> B["Request DTO"] --> C{{"MapStruct"}} --> D["JPA Entity"] --> E[("Database")]
+    E --> D --> F{{"MapStruct"}} --> G["Response DTO"] --> H["JSON Response"]
 ```
 
-**Benefits:** cleaner API contracts · separation of API and persistence models · less manual mapping code · better maintainability.
+| Benefit | Why it matters |
+|---|---|
+| Clean API contracts | Clients depend on DTOs, not on table structure |
+| Decoupled models | DB schema can evolve without breaking the API |
+| Less boilerplate | MapStruct generates mappers at compile time |
+| Maintainability | One place to change a mapping |
 
 ### 🛡️ Validation & Exception Handling
 
 Jakarta Bean Validation with centralized handling through `@RestControllerAdvice`.
 
-| Validated | Handled scenarios |
+| ✅ Validated | 🚨 Handled scenarios |
 |---|---|
 | Required fields, email, password | Validation errors |
-| Phone number, vehicle number | Resource not found, duplicate resources |
-| Parking slot data, parking rates | Unauthorized actions, slot unavailable |
-| | Authentication failures, access denied, runtime exceptions |
+| Phone number, vehicle number | Resource not found · duplicate resources |
+| Parking slot data, parking rates | Unauthorized actions · slot unavailable |
+| | Authentication failures · access denied · runtime exceptions |
 
 ---
 
@@ -176,44 +214,87 @@ Jakarta Bean Validation with centralized handling through `@RestControllerAdvice
 
 Stateless JWT authentication with Spring Security.
 
-**Capabilities:** registration and login · BCrypt hashing · JWT generation and validation · custom `UserDetailsService` · JWT authentication filter · `USER` / `ADMIN` roles · method-level security with `@PreAuthorize` · ownership validation.
+> **Capabilities:** registration & login · BCrypt hashing · JWT generation & validation · custom `UserDetailsService` · JWT authentication filter · `USER` / `ADMIN` roles · method-level security with `@PreAuthorize` · ownership validation
+
+**Phase 1 — Login (token generation)**
 
 ```mermaid
-flowchart LR
-    A[Client] --> B[Login]
-    B --> C[AuthenticationManager]
-    C --> D[UserDetailsService]
-    D --> E[Verify BCrypt Password]
-    E --> F[Generate JWT]
-    F --> G[Client Stores Token]
-    G --> H[Authorization: Bearer Token]
-    H --> I[JwtAuthenticationFilter]
-    I --> J[Validate JWT]
-    J --> K[SecurityContext]
-    K --> L[Role-Based Authorization]
-    L --> M[Controller]
+sequenceDiagram
+    autonumber
+    actor C as Client
+    participant AC as AuthController
+    participant AM as AuthenticationManager
+    participant US as CustomUserDetailsService
+    participant DB as MySQL
+    participant JU as JwtUtils
+
+    C->>AC: POST /auth/login (email, password)
+    AC->>AM: authenticate(credentials)
+    AM->>US: loadUserByUsername(email)
+    US->>DB: Find user + roles
+    DB-->>US: User data
+    US-->>AM: UserDetails
+    AM->>AM: Match password with BCrypt hash
+    AM-->>AC: Authentication success
+    AC->>JU: generateToken(user)
+    JU-->>AC: Signed JWT
+    AC-->>C: 200 OK + JWT
+```
+
+**Phase 2 — Accessing a protected API**
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor C as Client
+    participant F as JwtAuthenticationFilter
+    participant JU as JwtUtils
+    participant SC as SecurityContext
+    participant CT as Controller
+
+    C->>F: Request + Authorization: Bearer JWT
+    F->>JU: validateToken(jwt)
+    alt Token invalid or expired
+        JU-->>F: Invalid
+        F-->>C: 401 Unauthorized
+    else Token valid
+        JU-->>F: Valid + username
+        F->>SC: Set Authentication (user + roles)
+        F->>CT: Forward request
+        alt Role not allowed (@PreAuthorize)
+            CT-->>C: 403 Forbidden
+        else Role allowed
+            CT-->>C: 200 OK + Response DTO
+        end
+    end
 ```
 
 ### 🅿️ Intelligent Slot Allocation
 
-Users **do not select a slot manually**. The backend finds an available slot that matches the vehicle type. Supported vehicles: 🚗 `CAR` · 🏍️ `BIKE` · 🛺 `AUTO`.
+Users **do not select a slot manually**. The backend finds an available slot that matches the vehicle type.
+
+| Vehicle | Enum |
+|:---:|:---:|
+| 🚗 Car | `CAR` |
+| 🏍️ Bike | `BIKE` |
+| 🛺 Auto | `AUTO` |
 
 ```mermaid
 flowchart TD
-    A[Parking Request] --> B[Authenticate User]
-    B --> C[Validate Vehicle]
-    C --> D[Check Ownership]
-    D --> E[Check Active Booking]
-    E --> F[Find AVAILABLE Matching Slot]
-    F --> G[Acquire Database Lock]
-    G --> H[Allocate Slot]
-    H --> I[Slot = OCCUPIED]
-    I --> J[Create ACTIVE Booking]
+    A(["🅿️ Parking Request"]) --> B["Authenticate User"]
+    B --> C["Validate Vehicle"]
+    C --> D["Check Ownership"]
+    D --> E["Check Active Booking"]
+    E --> F["Find AVAILABLE Matching Slot"]
+    F --> G["🔒 Acquire Database Lock"]
+    G --> H["Allocate Slot"]
+    H --> I["Slot = OCCUPIED"]
+    I --> J(["✅ Create ACTIVE Booking"])
 ```
 
 ### 📋 Booking & Slot Lifecycle
 
-Booking state and slot state are kept synchronized.
+Booking state and slot state are always kept synchronized.
 
 <table>
 <tr>
@@ -248,24 +329,26 @@ stateDiagram-v2
 
 ### 🚪 Exit & Billing
 
-1. Find the user's `ACTIVE` booking and verify ownership
-2. Record exit time and calculate duration
-3. Apply **minimum one-hour billing**
-4. Apply the booking's **locked surge multiplier**
-5. Calculate the final amount
-6. Mark booking `COMPLETED` and release the slot
+| Step | Action |
+|:---:|---|
+| 1 | Find the user's `ACTIVE` booking and verify ownership |
+| 2 | Record exit time and calculate duration |
+| 3 | Apply **minimum one-hour billing** |
+| 4 | Apply the booking's **locked surge multiplier** |
+| 5 | Calculate the final amount |
+| 6 | Mark booking `COMPLETED` and release the slot |
 
 ```mermaid
 flowchart TD
-    A[Exit Request] --> B[Find ACTIVE Booking]
-    B --> C[Verify Ownership]
-    C --> D[Record End Time]
-    D --> E[Calculate Duration]
-    E --> F[Minimum 1 Hour Billing]
-    F --> G[Apply Locked Surge Multiplier]
-    G --> H[Calculate Amount]
-    H --> I[Booking = COMPLETED]
-    I --> J[Slot = AVAILABLE]
+    A(["🚪 Exit Request"]) --> B["Find ACTIVE Booking"]
+    B --> C["Verify Ownership"]
+    C --> D["Record End Time"]
+    D --> E["Calculate Duration"]
+    E --> F["Minimum 1 Hour Billing"]
+    F --> G["Apply Locked Surge Multiplier"]
+    G --> H["Calculate Amount"]
+    H --> I["Booking = COMPLETED"]
+    I --> J(["Slot = AVAILABLE"])
 ```
 
 ### 📄 Booking History
@@ -291,13 +374,13 @@ GET /booking/my-bookings?page=0&size=5&sort=amount,desc
 
 ## 💰 Pricing Engine
 
-Rates are stored in the **database**, not hardcoded in booking logic, and can be managed independently through admin APIs.
+Rates are stored in the **database**, not hardcoded in booking logic, and are managed independently through admin APIs.
 
-| Vehicle | Rate |
+| Vehicle | Base rate |
 |:---|---:|
-| 🏍️ Bike | ₹20 / hour |
-| 🛺 Auto | ₹30 / hour |
-| 🚗 Car | ₹50 / hour |
+| 🏍️ Bike | **₹20** / hour |
+| 🛺 Auto | **₹30** / hour |
+| 🚗 Car | **₹50** / hour |
 
 ### ⚡ Surge Pricing
 
@@ -305,13 +388,16 @@ A surge multiplier is calculated from current parking occupancy and **locked int
 
 ```mermaid
 flowchart LR
-    A[Total Capacity] --> C[Occupancy Ratio]
-    B[Occupied Slots] --> C
-    C --> D[Surge Multiplier]
-    D --> E[Booking]
-    E --> F[Multiplier Locked]
-    F --> G[Final Billing at Exit]
+    A["Total Capacity"] --> C["Occupancy Ratio"]
+    B["Occupied Slots"] --> C
+    C --> D["Surge Multiplier"]
+    D --> E["Booking Created"]
+    E --> F["🔒 Multiplier Locked"]
+    F --> G["Final Billing at Exit"]
 ```
+
+> [!TIP]
+> Locking the multiplier at entry means a driver is never charged more because the lot filled up *after* they arrived.
 
 ---
 
@@ -319,13 +405,13 @@ flowchart LR
 
 > **What happens if multiple users request the last available slot at almost the same time?**
 
-Slot allocation is protected using `@Transactional`, `PESSIMISTIC_WRITE`, database-level locking and atomic slot state updates, so the same slot is never assigned to concurrent requests.
+Slot allocation is protected with `@Transactional`, `PESSIMISTIC_WRITE`, database-level locking and atomic slot state updates — the same slot is never assigned to concurrent requests.
 
 ```mermaid
 sequenceDiagram
-    participant A as User A
-    participant B as User B
-    participant DB as MySQL
+    participant A as 👤 User A
+    participant B as 👤 User B
+    participant DB as 🐬 MySQL
 
     A->>DB: Find available slot + lock
     B->>DB: Find available slot + lock
@@ -335,27 +421,49 @@ sequenceDiagram
     B->>DB: Cannot allocate same occupied slot
 ```
 
+| Mechanism | Purpose |
+|---|---|
+| `@Transactional` | Keeps the allocation atomic |
+| `PESSIMISTIC_WRITE` | Blocks competing requests on the same row |
+| Atomic state update | Slot and booking change together or not at all |
+
 ---
 
 ## 📊 Admin Analytics
 
-| 🅿️ Parking analytics | 📋 Booking analytics |
-|---|---|
-| Total slots | Total bookings |
-| Available slots | Active bookings |
-| Occupied slots | Completed bookings |
-| Maintenance slots | Total completed revenue |
-| Overall occupancy % | |
-| Vehicle-type-wise slot stats | |
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🅿️ Parking analytics
+- Total slots
+- Available slots
+- Occupied slots
+- Maintenance slots
+- Overall occupancy %
+- Vehicle-type-wise slot stats
+
+</td>
+<td width="50%" valign="top">
+
+### 📋 Booking analytics
+- Total bookings
+- Active bookings
+- Completed bookings
+- Total completed revenue
+
+</td>
+</tr>
+</table>
 
 ```mermaid
 flowchart LR
-    A[Parking Slots] --> C[Analytics Service]
-    B[Bookings] --> C
-    C --> D[Occupancy Analytics]
-    C --> E[Booking Analytics]
-    C --> F[Revenue Analytics]
-    D --> G[Admin API]
+    A[("Parking Slots")] --> C["📊 Analytics Service"]
+    B[("Bookings")] --> C
+    C --> D["Occupancy Analytics"]
+    C --> E["Booking Analytics"]
+    C --> F["Revenue Analytics"]
+    D --> G(["🛡️ Admin API"])
     E --> G
     F --> G
 ```
@@ -421,7 +529,7 @@ erDiagram
 
 ## 🌐 API Reference
 
-Authenticated requests must send:
+All protected endpoints require:
 
 ```http
 Authorization: Bearer <JWT_TOKEN>
@@ -429,17 +537,19 @@ Authorization: Bearer <JWT_TOKEN>
 
 | Module | Method | Endpoint | Access |
 |---|:---:|---|:---:|
-| 🔐 Auth | `POST` | `/auth/register` | Public |
-| 🔐 Auth | `POST` | `/auth/login` | Public |
-| 🚘 Vehicle | `POST` | `/vehicle/saveVehicle` | 🔒 User |
-| 🅿️ Slots | `POST` | `/parkingslot/register` | 🛡️ Admin |
-| 📋 Booking | `POST` | `/booking/book` | 🔒 User |
-| 📋 Booking | `PUT` | `/booking/exit` | 🔒 User |
-| 📋 Booking | `GET` | `/booking/my-bookings` | 🔒 User |
-| 💰 Rates | `GET` | `/parking-rates` | 🔒 Authenticated |
-| 💰 Rates | `PUT` | `/parking-rates/{vehicleType}` | 🛡️ Admin |
-| 📊 Analytics | `GET` | `/admin/parking/analytics` | 🛡️ Admin |
-| 📊 Analytics | `GET` | `/admin/parking/booking-analytics` | 🛡️ Admin |
+| 🔐 Auth | ![POST](https://img.shields.io/badge/POST-22C55E?style=flat-square) | `/auth/register` | 🌍 Public |
+| 🔐 Auth | ![POST](https://img.shields.io/badge/POST-22C55E?style=flat-square) | `/auth/login` | 🌍 Public |
+| 🚘 Vehicle | ![POST](https://img.shields.io/badge/POST-22C55E?style=flat-square) | `/vehicle/saveVehicle` | 🔒 User |
+| 🅿️ Slots | ![POST](https://img.shields.io/badge/POST-22C55E?style=flat-square) | `/parkingslot/register` | 🛡️ Admin |
+| 📋 Booking | ![POST](https://img.shields.io/badge/POST-22C55E?style=flat-square) | `/booking/book` | 🔒 User |
+| 📋 Booking | ![PUT](https://img.shields.io/badge/PUT-F59E0B?style=flat-square) | `/booking/exit` | 🔒 User |
+| 📋 Booking | ![GET](https://img.shields.io/badge/GET-0EA5E9?style=flat-square) | `/booking/my-bookings` | 🔒 User |
+| 💰 Rates | ![GET](https://img.shields.io/badge/GET-0EA5E9?style=flat-square) | `/parking-rates` | 🔑 Authenticated |
+| 💰 Rates | ![PUT](https://img.shields.io/badge/PUT-F59E0B?style=flat-square) | `/parking-rates/{vehicleType}` | 🛡️ Admin |
+| 📊 Analytics | ![GET](https://img.shields.io/badge/GET-0EA5E9?style=flat-square) | `/admin/parking/analytics` | 🛡️ Admin |
+| 📊 Analytics | ![GET](https://img.shields.io/badge/GET-0EA5E9?style=flat-square) | `/admin/parking/booking-analytics` | 🛡️ Admin |
+
+<sub>🌍 Public &nbsp;·&nbsp; 🔑 Any authenticated user &nbsp;·&nbsp; 🔒 Role `USER` &nbsp;·&nbsp; 🛡️ Role `ADMIN`</sub>
 
 ---
 
@@ -517,30 +627,38 @@ src/main/java/com/sahil/smart_parking_project
 
 | Layer | Technologies |
 |---|---|
-| **Backend** | Java, Spring Boot, Spring Security, Spring Data JPA, Hibernate |
-| **API & Auth** | REST, JWT, BCrypt, Jakarta Validation |
-| **Mapping** | MapStruct |
-| **Database** | MySQL |
-| **Tooling** | Maven, Git & GitHub, Postman, Eclipse / Spring Tool Suite |
+| ⚙️ **Backend** | Java · Spring Boot · Spring Security · Spring Data JPA · Hibernate |
+| 🔌 **API & Auth** | REST · JWT · BCrypt · Jakarta Validation |
+| 🧩 **Mapping** | MapStruct |
+| 🗄️ **Database** | MySQL |
+| 🧰 **Tooling** | Maven · Git & GitHub · Postman · Eclipse / Spring Tool Suite |
 
 ---
 
-## ▶️ Run Locally
+## 🚀 Quick Start
 
-**1. Clone the repository**
+### ✅ Prerequisites
+
+| Requirement | Version |
+|---|---|
+| ☕ Java | 21+ |
+| 🐬 MySQL | 8.x |
+| 📦 Maven | Wrapper included (`mvnw`) |
+
+### 1️⃣ Clone the repository
 
 ```bash
 git clone https://github.com/Sahil2u47/smart_parking_system.git
 cd smart_parking_system
 ```
 
-**2. Create the database**
+### 2️⃣ Create the database
 
 ```sql
 CREATE DATABASE smart_parkingdb;
 ```
 
-**3. Configure environment variables**
+### 3️⃣ Configure environment variables
 
 ```env
 DB_USERNAME=your_database_username
@@ -548,7 +666,10 @@ DB_PASSWORD=your_database_password
 JWT_SECRET=your_long_secure_jwt_secret
 ```
 
-**4. Run the application**
+> [!WARNING]
+> Never commit real credentials or your `JWT_SECRET`. Use a long, random secret in every environment.
+
+### 4️⃣ Run the application
 
 ```bash
 # Linux / macOS
@@ -558,18 +679,25 @@ JWT_SECRET=your_long_secure_jwt_secret
 mvnw.cmd spring-boot:run
 ```
 
-The backend starts at **http://localhost:8182**
+🎉 The backend is now live at **http://localhost:8182**
 
 ### 🔒 Security Model
 
-- Stateless authentication via `SessionCreationPolicy.STATELESS`
-- Public: `/auth/**`
-- All other APIs require a valid JWT and, where applicable, the correct role
+| Rule | Detail |
+|---|---|
+| Session policy | Stateless via `SessionCreationPolicy.STATELESS` |
+| Public routes | `/auth/**` |
+| Everything else | Requires a valid JWT and, where applicable, the correct role |
 
 ---
 
 ## 🔮 Roadmap
 
+- [x] 🔐 JWT authentication & RBAC
+- [x] 🅿️ Automatic slot allocation
+- [x] ⚡ Pessimistic locking for concurrency
+- [x] 💰 Database-backed rates & surge pricing
+- [x] 📊 Admin analytics
 - [ ] 💳 Payment gateway integration
 - [ ] 🔔 Email / SMS notifications
 
@@ -577,9 +705,11 @@ The backend starts at **http://localhost:8182**
 
 ## 🎓 What This Project Demonstrates
 
-Beyond basic CRUD, this backend covers **RESTful API design · layered architecture · Spring Security with JWT and RBAC · JPA/Hibernate relationships · transaction management · pessimistic locking · DTO design with MapStruct · bean validation · global exception handling · dynamic pricing · booking lifecycle management · pagination and sorting · business analytics**.
+Beyond basic CRUD, this backend covers:
 
-The focus is on understanding the real backend request flow: business rules, security, persistence, transactions and concurrency.
+`RESTful API design` · `Layered architecture` · `Spring Security with JWT & RBAC` · `JPA/Hibernate relationships` · `Transaction management` · `Pessimistic locking` · `DTO design with MapStruct` · `Bean validation` · `Global exception handling` · `Dynamic pricing` · `Booking lifecycle management` · `Pagination & sorting` · `Business analytics`
+
+The focus is on understanding the **real backend request flow**: business rules, security, persistence, transactions and concurrency.
 
 ---
 
@@ -597,7 +727,7 @@ The focus is on understanding the real backend request flow: business rules, sec
 
 *Built with ☕ Java + Spring Boot + persistence + security + a lot of debugging.*
 
-**🚗 Smart Parking System — Find. Book. Park.**
+### 🚗 Smart Parking System — **Find. Book. Park.**
 
 ⭐ If you find this project useful, consider starring the repository.
 
