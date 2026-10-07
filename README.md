@@ -66,7 +66,7 @@
 | 🅿️ | How can a parking slot be allocated automatically? | Vehicle-type based slot matching |
 | ⚡ | What if multiple users request the last slot at once? | `@Transactional` + `PESSIMISTIC_WRITE` locking |
 | 💰 | How can prices change with occupancy? | Database-backed rates + surge multiplier |
-| 🔄 | How do entry, exit and cancellation affect slot state? | Synchronized booking and slot state machines |
+| 🔄 | How do entry and exit affect slot state? | Synchronized booking and slot state machines |
 | 📊 | How do admins monitor utilization and revenue? | Dedicated analytics services and APIs |
 | 🧩 | How do we keep API contracts separate from DB entities? | DTOs + MapStruct |
 
@@ -83,7 +83,7 @@
 | 👤 **Users** | Registration, login, `USER` and `ADMIN` roles |
 | 🚘 **Vehicles** | Registration with ownership validation |
 | 🅿️ **Parking** | Automatic vehicle-type based slot allocation |
-| 📋 **Booking** | Entry, exit, cancellation and history |
+| 📋 **Booking** | Entry, exit and history |
 | 💰 **Pricing** | Database-backed rates with occupancy-based surge pricing |
 | ⚡ **Concurrency** | `@Transactional` with `PESSIMISTIC_WRITE` locking |
 | 📊 **Analytics** | Occupancy, booking and revenue analytics |
@@ -225,9 +225,7 @@ Booking state and slot state are kept synchronized.
 stateDiagram-v2
     [*] --> ACTIVE: Book Parking
     ACTIVE --> COMPLETED: Vehicle Exit
-    ACTIVE --> CANCELLED: User Cancels
     COMPLETED --> [*]
-    CANCELLED --> [*]
 ```
 
 </td>
@@ -239,7 +237,7 @@ stateDiagram-v2
 stateDiagram-v2
     [*] --> AVAILABLE
     AVAILABLE --> OCCUPIED: Booking
-    OCCUPIED --> AVAILABLE: Exit / Cancel
+    OCCUPIED --> AVAILABLE: Exit
     AVAILABLE --> MAINTENANCE: Admin
     MAINTENANCE --> AVAILABLE: Admin
 ```
@@ -270,40 +268,9 @@ flowchart TD
     I --> J[Slot = AVAILABLE]
 ```
 
-### ❌ Cancellation
-
-```mermaid
-flowchart LR
-    A[PUT /booking/cancel] --> B[Find ACTIVE Booking]
-    B --> C{Belongs to User?}
-    C -- No --> D[Unauthorized Action]
-    C -- Yes --> E[Status = CANCELLED]
-    E --> F[Slot = AVAILABLE]
-    F --> G[Transaction Commit]
-```
-
-**Rules**
-
-- Only `ACTIVE` bookings can be cancelled
-- Users can cancel **only their own** booking
-- Cancellation releases the allocated slot
-- A cancelled booking cannot be exited
-- Cancelled bookings remain visible in history
-- The operation is transactional
-
-```http
-PUT /booking/cancel
-Authorization: Bearer <JWT_TOKEN>
-Content-Type: application/json
-
-{
-  "vehicleNumber": "DL01AB1234"
-}
-```
-
 ### 📄 Booking History
 
-Users can retrieve their own bookings with **pagination, sorting and DTO-based responses**, including `CANCELLED` status.
+Users can retrieve their own bookings with **pagination, sorting and DTO-based responses**.
 
 ```http
 GET /booking/my-bookings?page=0&size=10&sort=startTime,desc
@@ -377,8 +344,8 @@ sequenceDiagram
 | Total slots | Total bookings |
 | Available slots | Active bookings |
 | Occupied slots | Completed bookings |
-| Maintenance slots | Cancelled bookings |
-| Overall occupancy % | Total completed revenue |
+| Maintenance slots | Total completed revenue |
+| Overall occupancy % | |
 | Vehicle-type-wise slot stats | |
 
 ```mermaid
@@ -468,7 +435,6 @@ Authorization: Bearer <JWT_TOKEN>
 | 🅿️ Slots | `POST` | `/parkingslot/register` | 🛡️ Admin |
 | 📋 Booking | `POST` | `/booking/book` | 🔒 User |
 | 📋 Booking | `PUT` | `/booking/exit` | 🔒 User |
-| 📋 Booking | `PUT` | `/booking/cancel` | 🔒 User |
 | 📋 Booking | `GET` | `/booking/my-bookings` | 🔒 User |
 | 💰 Rates | `GET` | `/parking-rates` | 🔒 Authenticated |
 | 💰 Rates | `PUT` | `/parking-rates/{vehicleType}` | 🛡️ Admin |
@@ -581,8 +547,6 @@ DB_USERNAME=your_database_username
 DB_PASSWORD=your_database_password
 JWT_SECRET=your_long_secure_jwt_secret
 ```
-
-
 
 **4. Run the application**
 
