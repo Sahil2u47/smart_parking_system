@@ -1,0 +1,67 @@
+services:
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: smart-parking-mysql
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: smart_parkingdb
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$${MYSQL_USER} -p$${MYSQL_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./smart-parking-project
+
+    container_name: smart-parking-backend
+    restart: unless-stopped
+
+    ports:
+      - "8183:8182"
+
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/smart_parkingdb
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./smart-parking-project-frontend/smart-parking-frontend
+
+    container_name: smart-parking-frontend
+    restart: unless-stopped
+
+    ports:
+      - "3000:80"
+
+    depends_on:
+      - backend
+
+
+volumes:
+  mysql-data:
+    name: smart-parking-mysql-data
