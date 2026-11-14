@@ -6,9 +6,9 @@
 
 # 🚗 Smart Parking System
 
-**A production-grade REST API that allocates, prices and manages parking — automatically.**
+### A production-grade, containerized REST API that allocates, prices and manages parking — automatically.
 
-<sub>Slot allocation &nbsp;•&nbsp; JWT + RBAC &nbsp;•&nbsp; Surge pricing &nbsp;•&nbsp; Pessimistic locking &nbsp;•&nbsp; Admin analytics</sub>
+<sub>Slot allocation &nbsp;•&nbsp; JWT + RBAC &nbsp;•&nbsp; Surge pricing &nbsp;•&nbsp; Pessimistic locking &nbsp;•&nbsp; Admin analytics &nbsp;•&nbsp; Docker-ready</sub>
 
 <br/>
 
@@ -16,6 +16,7 @@
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Spring Security](https://img.shields.io/badge/Spring%20Security-JWT-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)](https://spring.io/projects/spring-security)
 [![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Maven](https://img.shields.io/badge/Maven-Build-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)](https://maven.apache.org/)
 
 ![API](https://img.shields.io/badge/API-REST-0EA5E9?style=flat-square)
@@ -23,6 +24,7 @@
 ![Security](https://img.shields.io/badge/Security-RBAC-8B5CF6?style=flat-square)
 ![Concurrency](https://img.shields.io/badge/Concurrency-Pessimistic%20Lock-EF4444?style=flat-square)
 ![Mapping](https://img.shields.io/badge/Mapping-MapStruct-EAB308?style=flat-square)
+![Deploy](https://img.shields.io/badge/Deploy-Docker%20Compose-2496ED?style=flat-square)
 ![Status](https://img.shields.io/badge/Status-Active-22C55E?style=flat-square)
 
 <br/>
@@ -31,6 +33,7 @@
 [**Features**](#-feature-highlights) &nbsp;·&nbsp;
 [**Architecture**](#-architecture) &nbsp;·&nbsp;
 [**Core Flows**](#-core-flows) &nbsp;·&nbsp;
+[**Docker**](#-docker--containerization) &nbsp;·&nbsp;
 [**API**](#-api-reference) &nbsp;·&nbsp;
 [**Quick Start**](#-quick-start)
 
@@ -42,10 +45,11 @@
 
 <table align="center">
 <tr>
-<td align="center" width="25%"><h2>3</h2><sub>Vehicle types<br/>CAR · BIKE · AUTO</sub></td>
-<td align="center" width="25%"><h2>2</h2><sub>Roles<br/>USER · ADMIN</sub></td>
-<td align="center" width="25%"><h2>11</h2><sub>REST endpoints</sub></td>
-<td align="center" width="25%"><h2>0</h2><sub>Double-booked slots<br/>by design</sub></td>
+<td align="center" width="20%"><h2>3</h2><sub>Vehicle types<br/>CAR · BIKE · AUTO</sub></td>
+<td align="center" width="20%"><h2>2</h2><sub>Roles<br/>USER · ADMIN</sub></td>
+<td align="center" width="20%"><h2>11</h2><sub>REST endpoints</sub></td>
+<td align="center" width="20%"><h2>0</h2><sub>Double-booked slots<br/>by design</sub></td>
+<td align="center" width="20%"><h2>1</h2><sub>Command to run<br/>the full stack</sub></td>
 </tr>
 </table>
 
@@ -65,13 +69,14 @@
 5. [Pricing Engine](#-pricing-engine)
 6. [Concurrency Control](#-concurrency-control)
 7. [Admin Analytics](#-admin-analytics)
-8. [Database Model](#-database-model)
-9. [API Reference](#-api-reference)
-10. [Project Structure](#-project-structure)
-11. [Tech Stack](#-tech-stack)
-12. [Quick Start](#-quick-start)
-13. [Roadmap](#-roadmap)
-14. [Author](#-author)
+8. [Docker & Containerization](#-docker--containerization)
+9. [Database Model](#-database-model)
+10. [API Reference](#-api-reference)
+11. [Project Structure](#-project-structure)
+12. [Tech Stack](#-tech-stack)
+13. [Quick Start](#-quick-start)
+14. [Roadmap](#-roadmap)
+15. [Author](#-author)
 
 </details>
 
@@ -79,7 +84,7 @@
 
 ## 🎯 Overview
 
-> **Smart Parking System is not a CRUD demo.** It is a backend built around the problems real parking platforms actually face — security, fairness under concurrency, pricing and observability.
+> **Smart Parking System is not a CRUD demo.** It is a backend built around the problems real parking platforms actually face — security, fairness under concurrency, pricing, observability and repeatable deployment.
 
 | | Real-world question | How this project answers it |
 |:---:|---|---|
@@ -90,9 +95,7 @@
 | 🔄 | How do entry and exit affect state? | Synchronized **booking & slot state machines** |
 | 📊 | How do admins see utilization and revenue? | Dedicated **analytics services** and APIs |
 | 🧩 | How do we keep API and DB models decoupled? | **DTOs + MapStruct** |
-
-> [!NOTE]
-> This repository contains the **backend only**. The frontend is maintained separately.
+| 🐳 | How do we run it identically everywhere? | **Docker + Docker Compose** — one command, same result |
 
 ---
 
@@ -126,8 +129,8 @@ Occupancy, booking and revenue insights, including vehicle-type-wise slot stats.
 ### 🧩 Clean API Design
 Entities are never exposed. Request/response DTOs are mapped with MapStruct.
 
-### 🛡️ Robust Errors
-Jakarta Bean Validation and a centralized `@RestControllerAdvice` with consistent error responses.
+### 🐳 Containerized
+Backend and MySQL run as isolated containers, orchestrated with Docker Compose and configured through environment variables.
 
 </td>
 </tr>
@@ -141,7 +144,7 @@ A clean, layered architecture with clear responsibilities per layer.
 
 ```mermaid
 flowchart TB
-    A["🖥️ Client · Postman · Frontend"]
+    A["🖥️ Client · Postman · Swagger"]
     B["🎛️ REST Controllers"]
     C["🧠 Service Layer · Business Rules"]
     D["🗃️ Repository Layer · Spring Data JPA"]
@@ -333,7 +336,7 @@ stateDiagram-v2
 |:---:|---|
 | 1 | Find the user's `ACTIVE` booking and verify ownership |
 | 2 | Record exit time and calculate duration |
-| 3 | Apply **minimum one-hour billing** |
+| 3 | Apply **minimum one-hour billing** (partial hours round up) |
 | 4 | Apply the booking's **locked surge multiplier** |
 | 5 | Calculate the final amount |
 | 6 | Mark booking `COMPLETED` and release the slot |
@@ -470,6 +473,95 @@ flowchart LR
 
 ---
 
+## 🐳 Docker & Containerization
+
+The entire backend stack — **Spring Boot API + MySQL** — is containerized and orchestrated with **Docker Compose**. Anyone with Docker installed can run the complete system with a single command, without installing Java, Maven or MySQL locally.
+
+### 🤔 Why Docker?
+
+A backend with a database has more moving parts than just code: a specific Java version, a specific MySQL version, environment variables, ports and networking. Docker packages all of that into reproducible units.
+
+> **"It works on my machine" is not a deployment strategy.** Docker makes the machine part of the project.
+
+### ✅ Key advantages
+
+| | Advantage | What it means for this project |
+|:---:|---|---|
+| 🔁 | **Reproducibility** | Same Java 21 runtime and MySQL 8 version on every machine — no version mismatch bugs |
+| ⚡ | **One-command setup** | `docker compose up --build` starts the database and the API together; no manual install or configuration |
+| 🧱 | **Isolation** | The app and the database run in their own containers and never conflict with other software on the host |
+| 🌐 | **Service networking** | Containers talk to each other by service name (`mysql`), over a private Docker network |
+| 💾 | **Data persistence** | A named volume keeps MySQL data safe across container restarts and rebuilds |
+| 🩺 | **Health-aware startup** | The API starts only after MySQL passes its health check — no connection-refused race conditions |
+| 🔐 | **Config via environment** | Secrets (DB credentials, `JWT_SECRET`) are injected through `.env`, never baked into the image or committed |
+| 🚀 | **Deployment-ready** | The same image that runs locally can run on a VM, a cloud server or any container platform |
+| 🧹 | **Clean teardown** | `docker compose down` removes everything cleanly; nothing is left on the host |
+| 🤝 | **Easy onboarding** | New contributors and reviewers can run the project in minutes |
+
+### 🧩 Container architecture
+
+```mermaid
+flowchart LR
+    U["👤 Client<br/>Postman · Swagger"] -->|"HTTP :8183"| B
+
+    subgraph DC["🐳 Docker Compose · private network"]
+        direction LR
+        B["☕ backend<br/>Spring Boot API"] -->|"JDBC · mysql:3306"| M[("🐬 mysql<br/>MySQL 8")]
+    end
+
+    M --- V[("💾 Named volume<br/>mysql-data")]
+    E["📄 .env<br/>DB + JWT secrets"] -.-> B
+    E -.-> M
+```
+
+| Service | Image | Role | Notes |
+|---|---|---|---|
+| `mysql` | `mysql:8` | Database | Health-checked, data stored in a named volume |
+| `backend` | Built from the project `Dockerfile` | REST API | Waits for `mysql` to be **healthy** before starting |
+
+### 📦 Files added
+
+| File | Purpose |
+|---|---|
+| `Dockerfile` | Builds the Spring Boot backend image |
+| `compose.yaml` | Defines and wires the services, network, volume and health check |
+| `.dockerignore` | Keeps the build context small and secrets out of the image |
+| `.env` | Holds environment variables (**git-ignored** — never commit it) |
+
+### ▶️ Run with Docker
+
+```bash
+# Start everything (build images + run containers)
+docker compose up --build
+
+# Run in the background
+docker compose up --build -d
+
+# Follow backend logs
+docker compose logs -f backend
+
+# Check container status and health
+docker compose ps
+
+# Stop and remove containers (data volume is preserved)
+docker compose down
+
+# Stop and also wipe the database volume
+docker compose down -v
+```
+
+Once the containers are healthy:
+
+| Resource | URL |
+|---|---|
+| 🌐 API base URL | `http://localhost:8183` |
+| 📘 Swagger UI | `http://localhost:8183/swagger-ui/index.html` |
+
+> [!IMPORTANT]
+> Create a `.env` file in the project root **before** running Compose. Never commit it — add `.env` to `.gitignore`.
+
+---
+
 ## 🗄️ Database Model
 
 ```mermaid
@@ -559,64 +651,72 @@ Authorization: Bearer <JWT_TOKEN>
 <summary><b>Click to expand</b></summary>
 
 ```text
-src/main/java/com/sahil/smart_parking_project
+smart_parking_system
 │
-├── controller
-│   ├── AuthController
-│   ├── VehicleController
-│   ├── ParkingSlotController
-│   ├── ParkingBookingController
-│   ├── ParkingRateController
-│   ├── AdminAnalyticsController
-│   └── AdminBookingAnalyticsController
+├── Dockerfile
+├── compose.yaml
+├── .dockerignore
+├── .env                      (git-ignored)
+├── pom.xml
 │
-├── service
-│   ├── AuthService
-│   ├── ParkingSlotBookingService
-│   ├── ParkingSlotService
-│   ├── VehicleService
-│   ├── ParkingRateService
-│   ├── ParkingAnalyticsService
-│   └── ParkingBookingAnalyticsService
-│
-├── repository
-│   ├── UserRepository
-│   ├── VehicleRepository
-│   ├── ParkingSlotRepository
-│   ├── BookingRepository
-│   ├── ParkingRateRepository
-│   └── RoleRepository
-│
-├── entity
-│   ├── User · Role · Vehicle
-│   └── ParkingSlot · Booking · ParkingRate
-│
-├── dto
-│   ├── Auth · Booking · Vehicle DTOs
-│   ├── Parking Slot · Parking Rate DTOs
-│   ├── Analytics DTOs
-│   └── PageResponseDTO
-│
-├── security
-│   ├── JwtUtils
-│   ├── JwtAuthenticationFilter
-│   ├── CustomUserDetailsService
-│   └── SmartParkingSpringSecurity
-│
-├── map_struct
-│   ├── UserMapper · VehicleMapper · BookingMapper
-│   └── ParkingSlotMapper · ParkingRateMapper
-│
-├── globalException
-│   ├── GlobalExceptionHandler · ErrorResponse
-│   ├── ResourceNotFoundException · UnauthorizedActionException
-│   └── SlotUnavailableException · DuplicateResourceException
-│
-├── enums
-│   └── RoleType · VehicleType · SlotStatus · BookingStatus
-│
-└── util
-    └── ParkingBookingSlotUtil
+└── src/main/java/com/sahil/smart_parking_project
+    │
+    ├── controller
+    │   ├── AuthController
+    │   ├── VehicleController
+    │   ├── ParkingSlotController
+    │   ├── ParkingBookingController
+    │   ├── ParkingRateController
+    │   ├── AdminAnalyticsController
+    │   └── AdminBookingAnalyticsController
+    │
+    ├── service
+    │   ├── AuthService
+    │   ├── ParkingSlotBookingService
+    │   ├── ParkingSlotService
+    │   ├── VehicleService
+    │   ├── ParkingRateService
+    │   ├── ParkingAnalyticsService
+    │   └── ParkingBookingAnalyticsService
+    │
+    ├── repository
+    │   ├── UserRepository
+    │   ├── VehicleRepository
+    │   ├── ParkingSlotRepository
+    │   ├── BookingRepository
+    │   ├── ParkingRateRepository
+    │   └── RoleRepository
+    │
+    ├── entity
+    │   ├── User · Role · Vehicle
+    │   └── ParkingSlot · Booking · ParkingRate
+    │
+    ├── dto
+    │   ├── Auth · Booking · Vehicle DTOs
+    │   ├── Parking Slot · Parking Rate DTOs
+    │   ├── Analytics DTOs
+    │   └── PageResponseDTO
+    │
+    ├── security
+    │   ├── JwtUtils
+    │   ├── JwtAuthenticationFilter
+    │   ├── CustomUserDetailsService
+    │   └── SmartParkingSpringSecurity
+    │
+    ├── map_struct
+    │   ├── UserMapper · VehicleMapper · BookingMapper
+    │   └── ParkingSlotMapper · ParkingRateMapper
+    │
+    ├── globalException
+    │   ├── GlobalExceptionHandler · ErrorResponse
+    │   ├── ResourceNotFoundException · UnauthorizedActionException
+    │   └── SlotUnavailableException · DuplicateResourceException
+    │
+    ├── enums
+    │   └── RoleType · VehicleType · SlotStatus · BookingStatus
+    │
+    └── util
+        └── ParkingBookingSlotUtil
 ```
 
 </details>
@@ -631,34 +731,27 @@ src/main/java/com/sahil/smart_parking_project
 | 🔌 **API & Auth** | REST · JWT · BCrypt · Jakarta Validation |
 | 🧩 **Mapping** | MapStruct |
 | 🗄️ **Database** | MySQL |
+| 🐳 **DevOps** | Docker · Docker Compose |
 | 🧰 **Tooling** | Maven · Git & GitHub · Postman · Eclipse / Spring Tool Suite |
 
 ---
 
 ## 🚀 Quick Start
 
-### ✅ Prerequisites
+Choose either path — **Docker** (recommended) or **Local**.
 
-| Requirement | Version |
-|---|---|
-| ☕ Java | 21+ |
-| 🐬 MySQL | 8.x |
-| 📦 Maven | Wrapper included (`mvnw`) |
+### 🐳 Option A — Run with Docker (recommended)
 
-### 1️⃣ Clone the repository
+**Prerequisites:** Docker Desktop (or Docker Engine + Compose plugin)
+
+**1. Clone the repository**
 
 ```bash
 git clone https://github.com/Sahil2u47/smart_parking_system.git
 cd smart_parking_system
 ```
 
-### 2️⃣ Create the database
-
-```sql
-CREATE DATABASE smart_parkingdb;
-```
-
-### 3️⃣ Configure environment variables
+**2. Create the `.env` file** in the project root
 
 ```env
 DB_USERNAME=your_database_username
@@ -669,7 +762,35 @@ JWT_SECRET=your_long_secure_jwt_secret
 > [!WARNING]
 > Never commit real credentials or your `JWT_SECRET`. Use a long, random secret in every environment.
 
-### 4️⃣ Run the application
+**3. Start the stack**
+
+```bash
+docker compose up --build
+```
+
+🎉 The backend is now live at **http://localhost:8183**
+
+---
+
+### 💻 Option B — Run locally
+
+**Prerequisites**
+
+| Requirement | Version |
+|---|---|
+| ☕ Java | 21+ |
+| 🐬 MySQL | 8.x |
+| 📦 Maven | Wrapper included (`mvnw`) |
+
+**1. Create the database**
+
+```sql
+CREATE DATABASE smart_parkingdb;
+```
+
+**2. Set the same environment variables** (`DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`)
+
+**3. Run the application**
 
 ```bash
 # Linux / macOS
@@ -680,6 +801,16 @@ mvnw.cmd spring-boot:run
 ```
 
 🎉 The backend is now live at **http://localhost:8182**
+
+---
+
+### 🔑 First-time setup
+
+The `USER` and `ADMIN` roles must exist in the `role` table before registering users. Seed them once on a fresh database:
+
+```sql
+INSERT INTO role (name) VALUES ('USER'), ('ADMIN');
+```
 
 ### 🔒 Security Model
 
@@ -693,8 +824,11 @@ mvnw.cmd spring-boot:run
 
 ## 🔮 Roadmap
 
+- [x] 🐳 Docker & Docker Compose support
 - [ ] 💳 Payment gateway integration
 - [ ] 🔔 Email / SMS notifications
+- [ ] ⚙️ CI/CD pipeline with GitHub Actions
+- [ ] ☁️ Cloud deployment
 
 ---
 
@@ -702,9 +836,9 @@ mvnw.cmd spring-boot:run
 
 Beyond basic CRUD, this backend covers:
 
-`RESTful API design` · `Layered architecture` · `Spring Security with JWT & RBAC` · `JPA/Hibernate relationships` · `Transaction management` · `Pessimistic locking` · `DTO design with MapStruct` · `Bean validation` · `Global exception handling` · `Dynamic pricing` · `Booking lifecycle management` · `Pagination & sorting` · `Business analytics`
+`RESTful API design` · `Layered architecture` · `Spring Security with JWT & RBAC` · `JPA/Hibernate relationships` · `Transaction management` · `Pessimistic locking` · `DTO design with MapStruct` · `Bean validation` · `Global exception handling` · `Dynamic pricing` · `Booking lifecycle management` · `Pagination & sorting` · `Business analytics` · `Docker & Docker Compose` · `Containerized deployment`
 
-The focus is on understanding the **real backend request flow**: business rules, security, persistence, transactions and concurrency.
+The focus is on understanding the **real backend request flow**: business rules, security, persistence, transactions, concurrency and reproducible deployment.
 
 ---
 
@@ -720,7 +854,7 @@ The focus is on understanding the **real backend request flow**: business rules,
 
 <br/>
 
-*Built with ☕ Java + Spring Boot + persistence + security + a lot of debugging.*
+*Built with ☕ Java + Spring Boot + persistence + security + containers + a lot of debugging.*
 
 ### 🚗 Smart Parking System — **Find. Book. Park.**
 
